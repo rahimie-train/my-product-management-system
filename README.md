@@ -837,75 +837,220 @@ export const updateCategory = (id, category) => {
 - Create `CategoryFormFunction.js` and `CategoryListFunction.js` as functional components.
 - Discuss useState and useEffect hooks.
 CategoryFormFunction.js
-```jsx
+
+#### I: Importing Dependencies
+
+Start by importing React and any necessary services:
+
+```
 import React, { useState } from 'react';
-import { createCategory } from '../../services/ApiCategory';
+//import { createCategory } from '../../services/ApiCategory';
+```
 
-const CategoryFormFunction = ({ fetchCategories }) => {
-  const [categoryName, setCategoryName] = useState('');
-  const [description, setDescription] = useState('');
+#### II: Defining the Functional Component
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    if (name === 'name') setCategoryName(value);
-    if (name === 'description') setDescription(value);
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    await createCategory({ name: categoryName, description });
-    setCategoryName('');
-    setDescription('');
-    fetchCategories();
-  };
-
+```
+const CategoryFormFunction = () => {
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        name="name"
-        value={categoryName}
-        onChange={handleChange}
-        placeholder="Category Name"
-      />
-      <input
-        type="text"
-        name="description"
-        value={description}
-        onChange={handleChange}
-        placeholder="Category Description"
-      />
+    "test"
+  );
+};    
+```
+
+#### III: Introducing useState Hook
+```
+const [categoryName, setCategoryName] = useState('');
+const [description, setDescription] = useState('');
+
+```
+
+#### IV: Handling Input Changes & Submit Function
+```
+const handleChange = (event) => {
+  const { name, value } = event.target;
+  if (name === 'name') setCategoryName(value);
+  if (name === 'description') setDescription(value);
+};
+```
+```
+const handleSubmit = (event) => {
+  event.preventDefault();
+
+  // Log the current state values
+  console.log({
+    categoryName: categoryName,
+    description: description,
+  });
+
+  // Display an alert with the submitted category name and description
+  alert(`Category Name: ${categoryName}\nCategory Description: ${description}`);
+
+  // Clear the input fields after submission
+  setCategoryName('');
+  setDescription('');
+
+  // API integration will be handled in the next chapter
+  //await createCategory({ name: categoryName, description });
+  //fetchCategories();
+};
+```
+
+#### V: Rendering the Form
+```
+const CategoryFormFunction = () => {
+  return (
+    <form>
+      <input type="text" name="name" placeholder="Category Name" />
+      <input type="text" name="description" placeholder="Category Description" />
       <button type="submit">Add Category</button>
     </form>
   );
 };
-
-export default CategoryFormFunction;
 ```
+
+#### VII: Rendering the Form with Function
+
+Start by importing React and any necessary services:
+
+```
+return (
+  <form onSubmit={handleSubmit}>
+    <input
+      type="text"
+      name="name"
+      value={categoryName}
+      onChange={handleChange}
+      placeholder="Category Name"
+    />
+    <input
+      type="text"
+      name="description"
+      value={description}
+      onChange={handleChange}
+      placeholder="Category Description"
+    />
+    <button type="submit">Add Category</button>
+  </form>
+);
+
+
+```
+
+#### VI: Exporting the Component
+
+```
+export default CategoryFormFunction;
+
+```
+
+
+
+<details>
+  <summary>full code</summary>
+
+  ```jsx
+  import React, { useState } from 'react';
+	import { createCategory } from '../../services/ApiCategory';
+
+	const CategoryFormFunction = ({ fetchCategories }) => {
+	  const [categoryName, setCategoryName] = useState('');
+	  const [description, setDescription] = useState('');
+
+	  const handleChange = (event) => {
+		const { name, value } = event.target;
+		if (name === 'name') setCategoryName(value);
+		if (name === 'description') setDescription(value);
+	  };
+
+	  const handleSubmit = async (event) => {
+		event.preventDefault();
+		await createCategory({ name: categoryName, description });
+		setCategoryName('');
+		setDescription('');
+		fetchCategories();
+	  };
+
+	  return (
+		<form onSubmit={handleSubmit}>
+		  <input
+			type="text"
+			name="name"
+			value={categoryName}
+			onChange={handleChange}
+			placeholder="Category Name"
+		  />
+		  <input
+			type="text"
+			name="description"
+			value={description}
+			onChange={handleChange}
+			placeholder="Category Description"
+		  />
+		  <button type="submit">Add Category</button>
+		</form>
+	  );
+	};
+
+	export default CategoryFormFunction;
+
+
+  ```
+</details>
+
 CategoryListFunction.js
-```jsx
+
+
+#### I: Importing Dependencies
+
+Start by importing React and any necessary services:
+
+```
 import React, { useEffect, useState } from 'react';
 import { getCategories, deleteCategory, updateCategory } from '../../services/ApiCategory';
 import './Category.css';
 import CategoryFormFunction from './CategoryFormFunction';
 
+```
+
+#### II: Defining the Functional Component
+
+```
 const CategoryListFunction = () => {
+  return (
+    "testCategory"
+  );
+
+}   
+```
+
+#### III: Introducing useState Hook
+```
   const [categories, setCategories] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [currentCategory, setCurrentCategory] = useState({ id: '', name: '', description: '' });
 
-  useEffect(() => {
-    fetchCategories();
-  }, []);
+```
+#### III: Lifecycle Method and Fetch Categories
 
-  const fetchCategories = async () => {
-    const categories = await getCategories();
-    setCategories(categories);
-  };
 
+```
+componentDidMount() {
+  // this.fetchCategories();
+}
+
+fetchCategories = async () => {
+  // const categories = await getCategories();
+  // this.setState({ categories });
+};
+
+
+```
+
+#### IV: Handling Delete, Edit, and Cancel Edit
+```
   const handleDelete = async (id) => {
     await deleteCategory(id);
-    fetchCategories();
+    fetchCategories(); // Refresh the list after deletion
   };
 
   const handleEdit = (category) => {
@@ -918,6 +1063,10 @@ const CategoryListFunction = () => {
     setCurrentCategory({ id: '', name: '', description: '' });
   };
 
+
+```
+#### V: Handling Input Changes and Update and Add using props
+```
   const handleChange = (event) => {
     const { name, value } = event.target;
     setCurrentCategory((prevCategory) => ({
@@ -937,6 +1086,11 @@ const CategoryListFunction = () => {
     fetchCategories();
   };
 
+```
+
+#### II: Rendering the Functional Component
+
+```
   return (
     <div>
       <h2>Categories</h2>
@@ -995,12 +1149,127 @@ const CategoryListFunction = () => {
       </table>
     </div>
   );
-};
-
-export default CategoryListFunction;
+ 
 ```
 
-
+<details>
+  <summary>full code</summary>
+    ```jsx
+      import React, { useEffect, useState } from 'react';
+    	import { getCategories, deleteCategory, updateCategory } from '../../services/ApiCategory';
+    	import './Category.css';
+    	import CategoryFormFunction from './CategoryFormFunction';
+    
+    	const CategoryListFunction = () => {
+    	  const [categories, setCategories] = useState([]);
+    	  const [isEditing, setIsEditing] = useState(false);
+    	  const [currentCategory, setCurrentCategory] = useState({ id: '', name: '', description: '' });
+    
+    	  useEffect(() => {
+    		fetchCategories();
+    	  }, []);
+    
+    	  const fetchCategories = async () => {
+    		const categories = await getCategories();
+    		setCategories(categories);
+    	  };
+    
+    	  const handleDelete = async (id) => {
+    		await deleteCategory(id);
+    		fetchCategories();
+    	  };
+    
+    	  const handleEdit = (category) => {
+    		setIsEditing(true);
+    		setCurrentCategory(category);
+    	  };
+    
+    	  const handleCancelEdit = () => {
+    		setIsEditing(false);
+    		setCurrentCategory({ id: '', name: '', description: '' });
+    	  };
+    
+    	  const handleChange = (event) => {
+    		const { name, value } = event.target;
+    		setCurrentCategory((prevCategory) => ({
+    		  ...prevCategory,
+    		  [name]: value,
+    		}));
+    	  };
+    
+    	  const handleUpdate = async (event) => {
+    		event.preventDefault();
+    		await updateCategory(currentCategory.id, {
+    		  name: currentCategory.name,
+    		  description: currentCategory.description,
+    		});
+    		setIsEditing(false);
+    		setCurrentCategory({ id: '', name: '', description: '' });
+    		fetchCategories();
+    	  };
+    
+    	  return (
+    		<div>
+    		  <h2>Categories</h2>
+    		  {isEditing ? (
+    			<form onSubmit={handleUpdate}>
+    			  <input
+    				type="text"
+    				name="name"
+    				value={currentCategory.name}
+    				onChange={handleChange}
+    				placeholder="Category Name"
+    			  />
+    			  <input
+    				type="text"
+    				name="description"
+    				value={currentCategory.description}
+    				onChange={handleChange}
+    				placeholder="Category Description"
+    			  />
+    			  <button type="submit" className="button button-update">
+    				Update
+    			  </button>
+    			  <button type="button" className="button button-delete" onClick={handleCancelEdit}>
+    				Cancel
+    			  </button>
+    			</form>
+    		  ) : (
+    			<CategoryFormFunction fetchCategories={fetchCategories} />
+    		  )}
+    		  <table>
+    			<thead>
+    			  <tr>
+    				<th>ID</th>
+    				<th>Name</th>
+    				<th>Description</th>
+    				<th>Actions</th>
+    			  </tr>
+    			</thead>
+    			<tbody>
+    			  {categories.map((category) => (
+    				<tr key={category.id}>
+    				  <td>{category.id}</td>
+    				  <td>{category.name}</td>
+    				  <td>{category.description}</td>
+    				  <td>
+    					<button className="button button-update" onClick={() => handleEdit(category)}>
+    					  Edit
+    					</button>
+    					<button className="button button-delete" onClick={() => handleDelete(category.id)}>
+    					  Delete
+    					</button>
+    				  </td>
+    				</tr>
+    			  ))}
+    			</tbody>
+    		  </table>
+    		</div>
+    	  );
+    	};
+  	export default CategoryListFunction;
+  	```
+  </details>
 
 ### 12. Task to Create Product Page (60 minutes)
 - Follow category page, task to create product registration page. Can use class / functional component
@@ -1008,6 +1277,7 @@ export default CategoryListFunction;
 - Url localhost / Mockapi: 'https://66b1b4381ca8ad33d4f4d9c0.mockapi.io/api/v1/product';
 - Implement similar logic for \`ProductForm.js\` &  \`ProductList.js\`
 Example form and list structure with API integration
+
 ```jsx
 import React, { Component } from 'react';
 import ProductForm from './ProductForm';
@@ -1029,11 +1299,7 @@ class ProductList extends Component {
 }
 
 export default ProductList;
-
 ```
-
-
-
 
 
 ## Conclusion (15 minutes)
